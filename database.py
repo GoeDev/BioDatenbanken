@@ -6,13 +6,14 @@ class Database(object):
 	def __init__(self, dbfile, parser):
 		self.conn = sqlite3.connect(dbfile)
 		self.cursor = self.conn.cursor()
+		self.parser = parser
 
 	def createbasestructure(self):
 		self.cursor.execute('''CREATE TABLE bclasses 
 		(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, bclass TEXT)''')
 		self.cursor.execute('''CREATE TABLE bnames 
 		(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, bname TEXT,
-		UNIQUE(name))''')
+		UNIQUE(bname))''')
 		self.cursor.execute('''CREATE TABLE tfnames 
 		(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
 		tfname TEXT,
@@ -62,7 +63,6 @@ class Database(object):
 		self.conn.commit()
 
 	def getnode(self, id):
-		
 		idsplit = id.split(".")
 		level = len(idsplit)
 		
@@ -79,8 +79,6 @@ class Database(object):
 			query += " AND tfgenus=" + idsplit[4]
 		if level > 5:
 			query += " AND tfspecies=" + idsplit[5]
-
-
 
 		self.cursor.execute(query)
 

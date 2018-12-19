@@ -3,6 +3,10 @@ class Sequence(object):
 	def __init__(self, bclass, name, tfspecies, comment, sequence, parser, args):
 		self.tfspecies = tfspecies
 		self.bclass = bclass
+		self.tfname = ""
+		self.bname = ""
+
+		found = False
 
 		if args == None:
 			for element in name.split("_"):
@@ -13,10 +17,13 @@ class Sequence(object):
 						for key in parser.name2id.keys():
 							if element.startswith(key):
 								self.tfname = key
+								found = True
 								break
 				else:
+					if found:
+						break
 					self.bname += " " + element
-
+			
 			if self.tfname == "":
 				print(name + " konnte nicht importiert werden, name nicht gefunden.")
 				self.valid = False

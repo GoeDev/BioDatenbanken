@@ -15,7 +15,6 @@ pathprefix = "tfc_dbd_lvl4_fasta"
 argparser = argparse.ArgumentParser(description='FASTA-Datenbanksoftware für TFC')
 argparser.add_argument("--id", "-i", help="ID, für welche eine FASTA-Datei generiert werden soll")
 args = argparser.parse_args()
-print(args.id)
 
 
 parser = Fastaparser()
@@ -50,5 +49,5 @@ else:
 
 #Fasta-Datei für ID ausgeben
 if not args.id == None:
-	print(db.getnode(str(id)))
+	print(db.getnode(str(args.id)))
 	
