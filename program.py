@@ -5,6 +5,9 @@ import argparse
 from fastaparser import Fastaparser
 from database import Database
 
+#loglevel
+logging.basicConfig(level=logging.WARNING)
+
 #globale variablen
 dbfilename = "database.db"
 name2idfilename = "name2ID.txt"
@@ -49,5 +52,7 @@ else:
 
 #Fasta-Datei für ID ausgeben
 if not args.id == None:
-	print(db.getnode(str(args.id)))
+	outfile = open(args.id + "_mammalia_dbd_fasta.fasta", "w+")
+	outfile.write(db.getnode(str(args.id)))
+	outfile.close()
 	

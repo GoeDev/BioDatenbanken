@@ -1,5 +1,6 @@
 from pathlib import Path
 from sequence import Sequence
+import logging
 
 class Fastaparser(object):
 	def __init__(self):

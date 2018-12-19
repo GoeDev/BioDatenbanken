@@ -1,3 +1,5 @@
+import logging
+
 class Sequence(object):
 
 	def __init__(self, bclass, name, tfspecies, comment, sequence, parser, args):
@@ -25,7 +27,7 @@ class Sequence(object):
 					self.bname += " " + element
 			
 			if self.tfname == "":
-				print(name + " konnte nicht importiert werden, name nicht gefunden.")
+				logging.warning(name + " konnte nicht importiert werden, Name in name2ID nicht gefunden.")
 				self.valid = False
 			else:
 				self.valid = True
