@@ -7,7 +7,6 @@ class Fastaparser(object):
 		self.seqlist = []
 
 	def readname2id(self, path):
-		path = "../name2ID.txt"
 		existcheck = Path(path)
 		if existcheck.is_file():
 			filehandle=open(path, "r")

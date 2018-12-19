@@ -5,7 +5,7 @@ from fastaparser import Fastaparser
 from database import Database
 
 dbfilename = "database.db"
-name2idfilename = "../name2ID.txt"
+name2idfilename = "name2ID.txt"
 pathprefix = "tfc_dbd_lvl4_fasta"
 
 existcheck = Path(dbfilename)
