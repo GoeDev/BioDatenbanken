@@ -13,6 +13,7 @@ logging.basicConfig(level=logging.WARNING)
 dbfilename = "database.db"
 name2idfilename = "name2ID.txt"
 pathprefix = "tfc_dbd_lvl4_fasta"
+alignprefix = "logoplot_fasta"
 
 
 #Kommandozeilenargumente verarbeiten usw.
@@ -34,6 +35,10 @@ else:
 
 	for filename in os.listdir(os.getcwd() + "/" + pathprefix):
 		parser.readfile(pathprefix + "/" + filename)
+
+	for filename in os.listdir(os.getcwd() + "/" + alignprefix):
+		parser.readfile(alignprefix + "/" + filename)
+		parser.aligncounter += 1	
 
 	db = Database(dbfilename, parser)
 	db.createbasestructure()

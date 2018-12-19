@@ -35,6 +35,7 @@ class Database(object):
 		tfspecies INTEGER NOT NULL,
 		comment TEXT,
 		sequence TEXT,
+		alignment INTEGER,
 		FOREIGN KEY (tfnameid) REFERENCES tfnames(id),
 		FOREIGN KEY (bclassid) REFERENCES bclasses(id),
 		FOREIGN KEY (bnameid) REFERENCES bnames(id))''')
@@ -55,8 +56,8 @@ class Database(object):
 		bnid = self.cursor.fetchone()[0]
 		self.cursor.execute("SELECT id FROM tfnames WHERE tfname='" + sequence.tfname+"'")
 		tfnid = self.cursor.fetchone()[0]
-		query = "INSERT INTO sequences (tfnameid, bclassid, bnameid, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, sequence)"
-		query += " VALUES ('" + str(tfnid) + "', '" + str(bclid) + "', '" + str(bnid) + "', '" + str(sequence.tfsuperclass) + "', '" + str(sequence.tfclass) + "', '" + str(sequence.tffamily) + "', '" + str(sequence.tfsubfamily) + "', '" + str(sequence.tfgenus) + "', '" + str(sequence.tfspecies) + "', '" + sequence.comment + "', '" + sequence.sequence + "')" 
+		query = "INSERT INTO sequences (tfnameid, bclassid, bnameid, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, sequence, alignment)"
+		query += " VALUES ('" + str(tfnid) + "', '" + str(bclid) + "', '" + str(bnid) + "', '" + str(sequence.tfsuperclass) + "', '" + str(sequence.tfclass) + "', '" + str(sequence.tffamily) + "', '" + str(sequence.tfsubfamily) + "', '" + str(sequence.tfgenus) + "', '" + str(sequence.tfspecies) + "', '" + sequence.comment + "', '" + sequence.sequence + "', '" + str(sequence.align) + "')" 
 		self.cursor.execute(query)
 
 	def commit(self):
@@ -68,7 +69,7 @@ class Database(object):
 		
 		query = "SELECT tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, tfname, bclass, bname, sequence, comment FROM sequences "
 		query += "INNER JOIN bclasses ON bclasses.id = sequences.bclassid INNER JOIN bnames ON bnames.id = sequences.bnameid INNER JOIN tfnames ON tfnames.ID = sequences.tfnameid "
-		query += "WHERE tfsuperclass=" + idsplit[0]
+		query += "WHERE alignment=0 AND tfsuperclass=" + idsplit[0]
 		if level > 1:
 			query += " AND tfclass=" + idsplit[1]
 		if level > 2:
@@ -96,7 +97,7 @@ class Database(object):
 			"tffamily": sequencedata[2],
 			"tfsubfamily": sequencedata[3],
 			"tfgenus": sequencedata[4]}
-			sequence = Sequence(bclass, "", tfspecies, comment, seq, self.parser, args)
+			sequence = Sequence(bclass, "", tfspecies, comment, seq, 0, self.parser, args)
 			fasta += self.parser.generate(sequence)
 
 		return fasta

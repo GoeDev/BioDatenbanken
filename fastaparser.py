@@ -6,6 +6,7 @@ class Fastaparser(object):
 	def __init__(self):
 		self.name2id = {}
 		self.seqlist = []
+		self.aligncounter = 1
 
 	def readname2id(self, path):
 		existcheck = Path(path)
@@ -21,7 +22,11 @@ class Fastaparser(object):
 		existcheck = Path(path)
 		if existcheck.is_file():
 			filehandle=open(path, "r")
-			
+
+			align = 0
+			if "logoplot" in path:
+				align = self.aligncounter
+
 			bclass = path.split("/")[-1].split("_")[1]
 
 			name = ""
@@ -33,7 +38,7 @@ class Fastaparser(object):
 				elif line.startswith(";"):
 					comment=line[1:].rstrip()
 				else:
-					sequ = Sequence(bclass, name, counter, comment, line.rstrip(), self, None)
+					sequ = Sequence(bclass, name, counter, comment, line.rstrip(), align, self, None)
 					if sequ.valid:
 						self.seqlist.append(sequ)
 					counter = counter + 1

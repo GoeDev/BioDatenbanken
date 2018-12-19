@@ -2,9 +2,10 @@ import logging
 
 class Sequence(object):
 
-	def __init__(self, bclass, name, tfspecies, comment, sequence, parser, args):
+	def __init__(self, bclass, name, tfspecies, comment, sequence, align, parser, args):
 		self.tfspecies = tfspecies
 		self.bclass = bclass
+		self.align = align
 		self.tfname = ""
 		self.bname = ""
 
