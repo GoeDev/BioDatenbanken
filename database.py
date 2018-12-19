@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 from sequence import Sequence
 
@@ -101,3 +102,67 @@ class Database(object):
 			fasta += self.parser.generate(sequence)
 
 		return fasta
+
+
+	def getnodealign(self, id):
+		idsplit = id.split(".")
+		level = len(idsplit)
+		
+		query = "SELECT tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, tfname, bclass, bname, sequence, comment, alignment FROM sequences "
+		query += "INNER JOIN bclasses ON bclasses.id = sequences.bclassid INNER JOIN bnames ON bnames.id = sequences.bnameid INNER JOIN tfnames ON tfnames.ID = sequences.tfnameid "
+		query += "WHERE tfsuperclass=" + idsplit[0]
+		if level > 1:
+			query += " AND tfclass=" + idsplit[1]
+		if level > 2:
+			query += " AND tffamily=" + idsplit[2]
+		if level > 3:
+			query += " AND tfsubfamily=" + idsplit[3]
+		if level > 4:
+			query += " AND tfgenus=" + idsplit[4]
+		if level > 5:
+			query += " AND tfspecies=" + idsplit[5]
+
+		self.cursor.execute(query)
+
+		fasta = ""
+		align = -1
+		level4 = -1
+		levelchanged = False
+
+		for sequencedata in self.cursor.fetchall():
+			if level4 == -1:
+				level4 = sequencedata[3]
+
+			if align == -1:
+				align = sequencedata[11]
+
+			if not sequencedata[11] == align:
+				if levelchanged:
+					filename = str(sequencedata[0]) + "." + str(sequencedata[1]) + "." + str(sequencedata[2]) + "_" + sequencedata[8] + "_dbd_logoplot.fasta" 
+					self.parser.write(filename, fasta)
+					fasta = ""
+				else:
+					filename = str(sequencedata[0]) + "." + str(sequencedata[1]) + "." + str(sequencedata[2]) + "." + str(sequencedata[3]) + "_" + sequencedata[8] + "_dbd_logoplot.fasta" 
+					self.parser.write(filename, fasta)
+					fasta = ""
+				align = sequencedata[11]
+				level4 = sequencedata[3]
+				levelchanged = False
+			
+			if not level4 == sequencedata[3]:
+				levelchanged = True
+
+			bclass = sequencedata[7]
+			tfspecies = sequencedata[5]
+			comment = sequencedata[10]
+			seq = sequencedata[9]
+			alignment = sequencedata[11]
+			args = {"bname": sequencedata[8],
+			"tfname": sequencedata[6],
+			"tfsuperclass": sequencedata[0],
+			"tfclass": sequencedata[1],
+			"tffamily": sequencedata[2],
+			"tfsubfamily": sequencedata[3],
+			"tfgenus": sequencedata[4]}
+			sequence = Sequence(bclass, "", tfspecies, comment, seq, alignment, self.parser, args)
+			fasta += self.parser.generate(sequence)

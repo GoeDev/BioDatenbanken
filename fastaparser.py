@@ -57,3 +57,8 @@ class Fastaparser(object):
 		fasta += ">" + header + "\n"
 		fasta += sequence.sequence + "\n"
 		return fasta
+
+	def write(self, filename, fasta):
+		outfile = open(filename, "w+")
+		outfile.write(fasta)
+		outfile.close()

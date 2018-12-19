@@ -58,7 +58,6 @@ else:
 
 #Fasta-Datei für ID ausgeben
 if not args.id == None:
-	outfile = open(args.id + "_mammalia_dbd_fasta.fasta", "w+")
-	outfile.write(db.getnode(str(args.id)))
-	outfile.close()
+	parser.write(args.id + "_mammalia_dbd_fasta.fasta", db.getnode(str(args.id)))
+	db.getnodealign(args.id)
 	
