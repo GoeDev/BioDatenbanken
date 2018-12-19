@@ -5,6 +5,8 @@ import logging
 
 from fastaparser import Fastaparser
 from database import Database
+from sequence import Sequence
+from alignment import Alignment
 
 #loglevel
 logging.basicConfig(level=logging.WARNING)
@@ -59,5 +61,13 @@ else:
 #Fasta-Datei für ID ausgeben
 if not args.id == None:
 	parser.write(args.id + "_mammalia_dbd_fasta.fasta", db.getnode(str(args.id)))
-	db.getnodealign(args.id)
+	
+	for alignment in db.getnodealign(args.id):
+		print(alignment.getprobability())
+		dummysequence = alignment.sequences[0]
+		if alignment.multlevels:
+			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "_" + dummysequence.bclass + "_dbd_logoplot.fasta"
+		else:
+			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "." + str(dummysequence.tfsubfamily) + "_" + dummysequence.bclass + "_dbd_logoplot.fasta"
+		parser.write(filename, alignment.getfasta())
 	

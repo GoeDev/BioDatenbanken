@@ -2,6 +2,7 @@ import sqlite3
 import os
 
 from sequence import Sequence
+from alignment import Alignment
 
 class Database(object):
 	def __init__(self, dbfile, parser):
@@ -110,7 +111,7 @@ class Database(object):
 		
 		query = "SELECT tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, tfname, bclass, bname, sequence, comment, alignment FROM sequences "
 		query += "INNER JOIN bclasses ON bclasses.id = sequences.bclassid INNER JOIN bnames ON bnames.id = sequences.bnameid INNER JOIN tfnames ON tfnames.ID = sequences.tfnameid "
-		query += "WHERE tfsuperclass=" + idsplit[0]
+		query += "WHERE alignment > 0 AND tfsuperclass=" + idsplit[0]
 		if level > 1:
 			query += " AND tfclass=" + idsplit[1]
 		if level > 2:
@@ -123,11 +124,13 @@ class Database(object):
 			query += " AND tfspecies=" + idsplit[5]
 
 		self.cursor.execute(query)
+		
+		alignments = []
 
-		fasta = ""
 		align = -1
 		level4 = -1
 		levelchanged = False
+		alignobj = Alignment()
 
 		for sequencedata in self.cursor.fetchall():
 			if level4 == -1:
@@ -138,13 +141,12 @@ class Database(object):
 
 			if not sequencedata[11] == align:
 				if levelchanged:
-					filename = str(sequencedata[0]) + "." + str(sequencedata[1]) + "." + str(sequencedata[2]) + "_" + sequencedata[8] + "_dbd_logoplot.fasta" 
-					self.parser.write(filename, fasta)
-					fasta = ""
+					alignobj.multlevels = True
+					alignments.append(alignobj)
+					alignobj = Alignment()
 				else:
-					filename = str(sequencedata[0]) + "." + str(sequencedata[1]) + "." + str(sequencedata[2]) + "." + str(sequencedata[3]) + "_" + sequencedata[8] + "_dbd_logoplot.fasta" 
-					self.parser.write(filename, fasta)
-					fasta = ""
+					alignments.append(alignobj)
+					alignobj = Alignment()
 				align = sequencedata[11]
 				level4 = sequencedata[3]
 				levelchanged = False
@@ -165,4 +167,6 @@ class Database(object):
 			"tfsubfamily": sequencedata[3],
 			"tfgenus": sequencedata[4]}
 			sequence = Sequence(bclass, "", tfspecies, comment, seq, alignment, self.parser, args)
-			fasta += self.parser.generate(sequence)
+			alignobj.addsequence(sequence)
+
+		return alignments
