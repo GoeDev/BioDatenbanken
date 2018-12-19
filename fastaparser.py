@@ -32,7 +32,7 @@ class Fastaparser(object):
 				elif line.startswith(";"):
 					comment=line[1:].rstrip()
 				else:
-					sequ = Sequence(bclass, name, counter, comment, line.rstrip(), self)
+					sequ = Sequence(bclass, name, counter, comment, line.rstrip(), self, None)
 					if sequ.valid:
 						self.seqlist.append(sequ)
 					counter = counter + 1
@@ -41,10 +41,13 @@ class Fastaparser(object):
 			quit()
 
 
-	def generate(self, comment, header, sequence):
+	def generate(self, sequence):
 		fasta = ""
-		if not comment == "":
+		if not sequence.comment == "":
 			fasta += ";" + comment + "\n"
+
+		header = sequence.bname.replace(" ", "_") + "_" + sequence.tfname
+
 		fasta += ">" + header + "\n"
-		fasta += sequence + "\n"
+		fasta += sequence.sequence + "\n"
 		return fasta
