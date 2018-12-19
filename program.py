@@ -23,12 +23,14 @@ else:
 
 	db.insert_bclass("mammalia")
     
-	#for name, id in parser.name2id.items():
-	#	splitid = id.split(".")
-	#	db.insert_tfname(name, splitid[0], splitid[1], splitid[2], splitid[3], splitid[4])
+	for name, id in parser.name2id.items():
+		splitid = id.split(".")
+		db.insert_tfname(name, splitid[0], splitid[1], splitid[2], splitid[3], splitid[4])
 
-	#for seq in parser.seqlist:
-	#	db.insert_bname(seq)
-	#	db.insert_sequence(seq)
+	for seq in parser.seqlist:
+		db.insert_bname(seq)
+		db.insert_sequence(seq)
+
+	db.commit()
 #for seq in parser.seqlist:
 #	print("Genus:" + seq.tfgenus + " Name:" + seq.bname + " TFName:" + seq.tfname + " Sequenz:" + seq.sequence)

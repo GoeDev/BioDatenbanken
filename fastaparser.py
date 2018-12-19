@@ -24,18 +24,19 @@ class Fastaparser(object):
 			
 			bclass = path.split("/")[-1].split("_")[1]
 
-			name=""
-			comment=""
-
-			for num, line in enumerate(filehandle, 1):
+			name = ""
+			comment = ""
+			counter = 1
+			for line in filehandle:
 				if line.startswith(">"):
 					name=line[1:].rstrip()
 				elif line.startswith(";"):
 					comment=line[1:].rstrip()
 				else:
-					sequ = Sequence(bclass, name, num, comment, line.rstrip(), self)
+					sequ = Sequence(bclass, name, counter, comment, line.rstrip(), self)
 					if sequ.valid:
 						self.seqlist.append(sequ)
+					counter = counter + 1
 		else:
 			print("Datei nicht gefunden: " + path)
 			quit()

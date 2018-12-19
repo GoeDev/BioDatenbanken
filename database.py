@@ -40,7 +40,7 @@ class Database(object):
 
 	def insert_bclass(self, name):
 		self.cursor.execute("INSERT INTO bclasses (name) VALUES ('" + name + "')")
-	
+
 	def insert_bname(self, sequence):
 		self.cursor.execute("INSERT OR IGNORE INTO bnames (name) VALUES ('" + sequence.bname + "')")
 
@@ -57,3 +57,6 @@ class Database(object):
 		query = "INSERT INTO sequences (tfcname, bclass, bname, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, sequence)"
 		query += " VALUES ('" + str(tfnid) + "', '" + str(bclid) + "', '" + str(bnid) + "', '" + str(sequence.tfsuperclass) + "', '" + str(sequence.tfclass) + "', '" + str(sequence.tffamily) + "', '" + str(sequence.tfsubfamily) + "', '" + str(sequence.tfgenus) + "', '" + str(sequence.tfspecies) + "', '" + sequence.comment + "', '" + sequence.sequence + "')" 
 		self.cursor.execute(query)
+
+	def commit(self):
+		self.conn.commit()
