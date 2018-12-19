@@ -39,3 +39,12 @@ class Fastaparser(object):
 		else:
 			print("Datei nicht gefunden: " + path)
 			quit()
+
+
+	def generate(self, comment, header, sequence):
+		fasta = ""
+		if not comment == "":
+			fasta += ";" + comment + "\n"
+		fasta += ">" + header + "\n"
+		fasta += sequence + "\n"
+		return fasta

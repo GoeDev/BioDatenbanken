@@ -3,7 +3,7 @@ import sqlite3
 from sequence import Sequence
 
 class Database(object):
-	def __init__(self, dbfile):
+	def __init__(self, dbfile, parser):
 		self.conn = sqlite3.connect(dbfile)
 		self.cursor = self.conn.cursor()
 
@@ -60,3 +60,6 @@ class Database(object):
 
 	def commit(self):
 		self.conn.commit()
+
+	def getnode(self, id):
+		idsplit = id.split(".")
