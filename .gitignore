@@ -1,3 +1,6 @@
 __pycache__
 .*
 database.db
+*.fasta
+!logoplot_fasta/*
+!tfc_dbd_lvl4_fasta/*

@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import argparse
 import logging
@@ -11,11 +12,17 @@ from alignment import Alignment
 #loglevel
 logging.basicConfig(level=logging.WARNING)
 
+
+mypath = sys.path[0]
+
 #globale variablen
-dbfilename = "database.db"
-name2idfilename = "name2ID.txt"
-pathprefix = "tfc_dbd_lvl4_fasta"
-alignprefix = "logoplot_fasta"
+dbfilename = mypath + "/database.db"
+name2idfilename = mypath + "/name2ID.txt"
+dbdpath = mypath + "/tfc_dbd_lvl4_fasta/"
+logoplotpath = mypath + "/logoplot_fasta/"
+
+dbdsuff = "_mammalia_dbd_fasta.fasta"
+logoplotsuff = "_dbd_logoplot.fasta"
 
 
 #Kommandozeilenargumente verarbeiten usw.
@@ -35,11 +42,11 @@ else:
 	print("Datenbank nicht gefunden, erzeuge Datenbank...")
 	parser.readname2id(name2idfilename)
 
-	for filename in os.listdir(os.getcwd() + "/" + pathprefix):
-		parser.readfile(pathprefix + "/" + filename)
+	for filename in os.listdir(dbdpath):
+		parser.readfile(dbdpath + filename)
 
-	for filename in os.listdir(os.getcwd() + "/" + alignprefix):
-		parser.readfile(alignprefix + "/" + filename)
+	for filename in os.listdir(logoplotpath):
+		parser.readfile(logoplotpath + filename)
 		parser.aligncounter += 1	
 
 	db = Database(dbfilename, parser)
@@ -60,14 +67,14 @@ else:
 
 #Fasta-Datei für ID ausgeben
 if not args.id == None:
-	parser.write(args.id + "_mammalia_dbd_fasta.fasta", db.getnode(str(args.id)))
+	parser.write(args.id + dbdsuff, db.getnode(str(args.id)))
 	
 	for alignment in db.getnodealign(args.id):
 		print(alignment.getprobability())
 		dummysequence = alignment.sequences[0]
 		if alignment.multlevels:
-			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "_" + dummysequence.bclass + "_dbd_logoplot.fasta"
+			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "_" + dummysequence.bclass + logoplotsuff
 		else:
-			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "." + str(dummysequence.tfsubfamily) + "_" + dummysequence.bclass + "_dbd_logoplot.fasta"
+			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "." + str(dummysequence.tfsubfamily) + "_" + dummysequence.bclass + logoplotsuff
 		parser.write(filename, alignment.getfasta())
 	
