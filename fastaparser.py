@@ -1,6 +1,8 @@
 from pathlib import Path
-from sequence import Sequence
 import logging
+
+from sequence import Sequence
+from sequencefromfile import Sequencefromfile
 
 class Fastaparser(object):
 	def __init__(self):
@@ -38,7 +40,8 @@ class Fastaparser(object):
 				elif line.startswith(";"):
 					comment=line[1:].rstrip()
 				else:
-					sequ = Sequence(bclass, name, counter, comment, line.rstrip(), align, self, None)
+					#sequ = Sequence(bclass, name, counter, comment, line.rstrip(), align, self, None)
+					sequ = Sequencefromfile(bclass, name, counter, comment, line.rstrip(), align, self)
 					if sequ.valid:
 						self.seqlist.append(sequ)
 					counter = counter + 1
@@ -50,7 +53,7 @@ class Fastaparser(object):
 	def generate(self, sequence):
 		fasta = ""
 		if not sequence.comment == "":
-			fasta += ";" + comment + "\n"
+			fasta += ";" + sequence.comment + "\n"
 
 		header = sequence.bname.replace(" ", "_") + "_" + sequence.tfname
 

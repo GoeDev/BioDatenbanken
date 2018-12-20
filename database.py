@@ -92,14 +92,15 @@ class Database(object):
 			tfspecies = sequencedata[5]
 			comment = sequencedata[10]
 			seq = sequencedata[9]
-			args = {"bname": sequencedata[8],
-			"tfname": sequencedata[6],
-			"tfsuperclass": sequencedata[0],
-			"tfclass": sequencedata[1],
-			"tffamily": sequencedata[2],
-			"tfsubfamily": sequencedata[3],
-			"tfgenus": sequencedata[4]}
-			sequence = Sequence(bclass, "", tfspecies, comment, seq, 0, self.parser, args)
+			bname = sequencedata[8]
+			tfname = sequencedata[6]
+			tfsuperclass = sequencedata[0]
+			tfclass = sequencedata[1]
+			tffamily = sequencedata[2]
+			tfsubfamily = sequencedata[3]
+			tfgenus = sequencedata[4]
+			#sequence = Sequence(bclass, "", tfspecies, comment, seq, 0, self.parser, args)
+			sequence = Sequence(bclass, bname, tfname, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, seq, 0, self.parser)
 			fasta += self.parser.generate(sequence)
 
 		return fasta
@@ -159,14 +160,15 @@ class Database(object):
 			comment = sequencedata[10]
 			seq = sequencedata[9]
 			alignment = sequencedata[11]
-			args = {"bname": sequencedata[8],
-			"tfname": sequencedata[6],
-			"tfsuperclass": sequencedata[0],
-			"tfclass": sequencedata[1],
-			"tffamily": sequencedata[2],
-			"tfsubfamily": sequencedata[3],
-			"tfgenus": sequencedata[4]}
-			sequence = Sequence(bclass, "", tfspecies, comment, seq, alignment, self.parser, args)
+			bname = sequencedata[8]
+			tfname = sequencedata[6]
+			tfsuperclass = sequencedata[0]
+			tfclass = sequencedata[1]
+			tffamily = sequencedata[2]
+			tfsubfamily = sequencedata[3]
+			tfgenus = sequencedata[4]
+			#sequence = Sequence(bclass, "", tfspecies, comment, seq, alignment, self.parser, args)
+			sequence = Sequence(bclass, bname, tfname, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, seq, alignment, self.parser)
 			alignobj.addsequence(sequence)
 
 		return alignments
