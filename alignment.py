@@ -4,10 +4,10 @@ from sequence import Sequence
 from fastaparser import Fastaparser
 
 class Alignment(object):
-	def __init__(self):
+	def __init__(self, parser):
 		self.sequences = []
 		self.multlevels = False
-		self.parser = Fastaparser()
+		self.parser = parser
 		self.alphabet = ["A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V", "X", "-"]
 
 	def addsequence(self, sequence):

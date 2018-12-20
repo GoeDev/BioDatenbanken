@@ -131,7 +131,7 @@ class Database(object):
 		align = -1
 		level4 = -1
 		levelchanged = False
-		alignobj = Alignment()
+		alignobj = Alignment(self.parser)
 
 		for sequencedata in self.cursor.fetchall():
 			if level4 == -1:
@@ -144,10 +144,10 @@ class Database(object):
 				if levelchanged:
 					alignobj.multlevels = True
 					alignments.append(alignobj)
-					alignobj = Alignment()
+					alignobj = Alignment(self.parser)
 				else:
 					alignments.append(alignobj)
-					alignobj = Alignment()
+					alignobj = Alignment(self.parser)
 				align = sequencedata[11]
 				level4 = sequencedata[3]
 				levelchanged = False
