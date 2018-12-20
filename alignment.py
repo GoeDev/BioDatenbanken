@@ -19,7 +19,7 @@ class Alignment(object):
 			fasta += self.parser.generate(sequence)
 		return fasta
 
-	def getprobability(self):
+	def getentropy(self):
 		probabilities = []
 		counter = 0
 		for x in self.sequences[0].sequence:

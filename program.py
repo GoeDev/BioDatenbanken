@@ -69,12 +69,13 @@ else:
 if not args.id == None:
 	parser.write(args.id + dbdsuff, db.getnode(str(args.id)))
 	
+	entropies = ""
 	for alignment in db.getnodealign(args.id):
-		print(alignment.getprobability())
 		dummysequence = alignment.sequences[0]
 		if alignment.multlevels:
 			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "_" + dummysequence.bclass + logoplotsuff
 		else:
 			filename = str(dummysequence.tfsuperclass) + "." + str(dummysequence.tfclass) + "." + str(dummysequence.tffamily) + "." + str(dummysequence.tfsubfamily) + "_" + dummysequence.bclass + logoplotsuff
 		parser.write(filename, alignment.getfasta())
-	
+		entropies += filename + "\n" + alignment.getentropy() + "\n"
+	parser.write("entropies.txt", entropies)
