@@ -105,6 +105,57 @@ class Database(object):
 
 		return fasta
 
+	def getspecies(self, species):
+		query = "SELECT tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, tfname, bclass, bname, sequence, comment FROM sequences "
+		query += "INNER JOIN bclasses ON bclasses.id = sequences.bclassid INNER JOIN bnames ON bnames.id = sequences.bnameid INNER JOIN tfnames ON tfnames.ID = sequences.tfnameid "
+		query += 'WHERE alignment=0 AND bnameid=(SELECT id from bnames WHERE bname LIKE "' + species +  '")'
+
+		self.cursor.execute(query)
+		fasta = ""
+
+		for sequencedata in self.cursor.fetchall():
+			bclass = sequencedata[7]
+			tfspecies = sequencedata[5]
+			comment = sequencedata[10]
+			seq = sequencedata[9]
+			bname = sequencedata[8]
+			tfname = sequencedata[6]
+			tfsuperclass = sequencedata[0]
+			tfclass = sequencedata[1]
+			tffamily = sequencedata[2]
+			tfsubfamily = sequencedata[3]
+			tfgenus = sequencedata[4]
+			#sequence = Sequence(bclass, "", tfspecies, comment, seq, 0, self.parser, args)
+			sequence = Sequence(bclass, bname, tfname, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, seq, 0, self.parser)
+			fasta += self.parser.generate(sequence)
+
+		return fasta
+
+	def gettf(self, tfname):
+		query = "SELECT tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, tfname, bclass, bname, sequence, comment FROM sequences "
+		query += "INNER JOIN bclasses ON bclasses.id = sequences.bclassid INNER JOIN bnames ON bnames.id = sequences.bnameid INNER JOIN tfnames ON tfnames.ID = sequences.tfnameid "
+		query += 'WHERE alignment=0 AND tfnameid=(SELECT id from tfnames WHERE tfname LIKE "' + tfname +  '")'
+
+		self.cursor.execute(query)
+		fasta = ""
+
+		for sequencedata in self.cursor.fetchall():
+			bclass = sequencedata[7]
+			tfspecies = sequencedata[5]
+			comment = sequencedata[10]
+			seq = sequencedata[9]
+			bname = sequencedata[8]
+			tfname = sequencedata[6]
+			tfsuperclass = sequencedata[0]
+			tfclass = sequencedata[1]
+			tffamily = sequencedata[2]
+			tfsubfamily = sequencedata[3]
+			tfgenus = sequencedata[4]
+			#sequence = Sequence(bclass, "", tfspecies, comment, seq, 0, self.parser, args)
+			sequence = Sequence(bclass, bname, tfname, tfsuperclass, tfclass, tffamily, tfsubfamily, tfgenus, tfspecies, comment, seq, 0, self.parser)
+			fasta += self.parser.generate(sequence)
+
+		return fasta
 
 	def getnodealign(self, id):
 		idsplit = id.split(".")

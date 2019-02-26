@@ -27,7 +27,15 @@ logoplotsuff = "_dbd_logoplot.fasta"
 
 #Kommandozeilenargumente verarbeiten usw.
 argparser = argparse.ArgumentParser(description='FASTA-Datenbanksoftware für TFC')
-argparser.add_argument("--id", "-i", help="ID, für welche eine FASTA-Datei generiert werden soll")
+sp = argparser.add_subparsers()
+
+sp_id = sp.add_parser("node", help="FASTA-Dateien für beliebigen TFClass-Knoten generieren und Entropie der Alignments dieses Knotens speichern")
+sp_id.add_argument('id', help="ID des Knotens")
+sp_species = sp.add_parser("species", help="FASTA-Dateien für beliebige biologische Spezies generieren")
+sp_species.add_argument('name', help="Name der Spezies")
+sp_tf = sp.add_parser("tf", help="FASTA-Dateien für beliebigen Transkriptionsfaktor generieren")
+sp_tf.add_argument('tfname', help="Name des Tranksriptionsfaktors")
+
 args = argparser.parse_args()
 
 
@@ -66,7 +74,7 @@ else:
 
 
 #Fasta-Datei für ID ausgeben
-if not args.id == None:
+if hasattr(args,"id"):
 	parser.write(args.id + dbdsuff, db.getnode(str(args.id)))
 	
 	entropies = ""
@@ -79,3 +87,7 @@ if not args.id == None:
 		parser.write(filename, alignment.getfasta())
 		entropies += filename + "\n" + alignment.getentropy() + "\n"
 	parser.write("entropies.txt", entropies)
+elif hasattr(args,"name"):
+	parser.write(args.name + dbdsuff, db.getspecies(args.name))
+elif hasattr(args,"tfname"):
+	parser.write(args.tfname + dbdsuff, db.gettf(args.tfname))
